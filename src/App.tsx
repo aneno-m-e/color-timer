@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import "./App.css";
 
 // Utilitaire -> move it somewhere else
@@ -11,10 +11,25 @@ function App() {
   const [isActive, setIsActive] = useState(false);
   const [startDate, setStartDate] = useState<Date>();
   const duration = 20 * 1000;
+  const [currentDate, setCurrentDate] = useState<Date>();
 
   const start = useCallback(() => {
     setIsActive(true);
-    setStartDate(new Date());
+    const updatedStartDate = new Date();
+    setStartDate(updatedStartDate);
+    // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
+    const intervalID = setInterval(() => {
+      const updatedCurrentDate = new Date();
+      if (
+        updatedCurrentDate.getTime() >=
+        updatedStartDate.getTime() + duration
+      ) {
+        clearInterval(intervalID);
+        setIsActive(false);
+      }
+      console.log(intervalID);
+      setCurrentDate(updatedCurrentDate);
+    }, 2000);
   }, []);
 
   // 2:
@@ -58,7 +73,7 @@ function App() {
       ")"
     );
   };
-  console.log(newColour);
+
   //need to put following part into 2.
   // document.getElementById("timer").style (need to find correct path / or update state but how? )
   // = newColour

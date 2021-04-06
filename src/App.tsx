@@ -12,6 +12,8 @@ function App() {
   const [startDate, setStartDate] = useState<Date>();
   const duration = 20 * 1000;
   const [currentDate, setCurrentDate] = useState<Date>();
+  const [firstColour, setFirstColour] = useState("rgb(52,111,171)"); // <= set by user
+  const [lastColour, setLastColour] = useState("rgb(226,255,79)"); // <= set by user
 
   const start = useCallback(() => {
     setIsActive(true);
@@ -30,22 +32,11 @@ function App() {
       console.log(intervalID);
       setCurrentDate(updatedCurrentDate);
     }, 2000);
+    // setInterval interval = to determine, but no need to refresh every seconds for long durations. Need to figure out what the best ratios are.
+    // maybe need to consider amplitude between colours as well?
   }, []);
 
-  // 2:
-  // const duration =
-  // Convert all numbers to seconds and add them together (not technically seconds, just need a number)
-  // const delay = to determine, but no need to refresh every seconds for long durations. Need to figure out what the best ratios are.
-  // maybe need to consider amplitude between colours as well?
-  // const timer =
-  // setInterval()
-  // each time, calculate the colour to display -> see 3. newColor
-  // + decrement duration by 1
-  // if duration = 0, stop timer (need to decide behaviour)
-
-  // 3:
-  const firstColour = "rgb(52,111,171)"; // <= in state
-  const lastColour = "rgb(226,255,79)"; // <= in state
+  let updatedColour = firstColour;
 
   const firstColourValues = getRGBValues(firstColour);
   const lastColourValues = getRGBValues(lastColour);
@@ -79,7 +70,7 @@ function App() {
   // = newColour
 
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor: updatedColour }}>
       <header
         id="timer"
         className={`App-header${isActive ? " App-header--active" : ""}`}

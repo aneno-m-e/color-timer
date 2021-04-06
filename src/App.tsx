@@ -1,16 +1,13 @@
 import React, { useState, useCallback, useRef } from "react";
 import "./App.css";
+import { formatToRGB, getRGBValues } from "./util";
 
 // Utilitaire -> move it somewhere else
-const getRGBValues = (colour: string): number[] => {
-  return colour.match(/\d+/g)?.map((e) => +e)!; // Unary plus. Industry standard: parseInt(e, 10)
-  // ! = forces TS to discard possibility of a null result
-};
 
 function App() {
   const [isActive, setIsActive] = useState(false);
   const [startDate, setStartDate] = useState<Date>();
-  const duration = 20 * 1000;
+  const duration = 5 * 1000;
   const [currentDate, setCurrentDate] = useState<Date>();
   const [firstColour, setFirstColour] = useState("rgb(52,111,171)"); // <= set by user
   const [lastColour, setLastColour] = useState("rgb(226,255,79)"); // <= set by user
@@ -29,48 +26,40 @@ function App() {
         clearInterval(intervalID);
         setIsActive(false);
       }
-      console.log(intervalID);
       setCurrentDate(updatedCurrentDate);
-    }, 2000);
+    }, duration / 256);
     // setInterval interval = to determine, but no need to refresh every seconds for long durations. Need to figure out what the best ratios are.
     // maybe need to consider amplitude between colours as well?
   }, []);
 
-  let updatedColour = firstColour;
+  let currentColour = firstColour;
 
-  const firstColourValues = getRGBValues(firstColour);
-  const lastColourValues = getRGBValues(lastColour);
+  if (currentDate && startDate) {
+    const firstColourValues = getRGBValues(firstColour);
+    const lastColourValues = getRGBValues(lastColour);
 
-  const VariationsPerInterval = lastColourValues.map((num, i) =>
-    Math.round((num - firstColourValues[i]) / 20)
-  );
-  // (divide by the number of time the colour is going to be refreshed instead of 20)
-  // Note: variations can be negative numbers
-  // /!\ Variations need to be integers /!\
+    const timeSpentRatio =
+      (currentDate.getTime() - startDate.getTime()) / duration;
 
-  let colourValues = [];
-  colourValues = firstColourValues; // need to define in 2. and pass to the newColoursValues function. Then update its value in setInterval
-  let newColour = (colourValues: number[]) => {
-    let newColourValues = colourValues.map(
-      (num, i) => num + VariationsPerInterval[i]
+    const colourDifference = lastColourValues.map(
+      (num, i) => num - firstColourValues[i]
     );
-    return (
-      "rgb(" +
-      newColourValues[0] +
-      ", " +
-      newColourValues[1] +
-      ", " +
-      newColourValues[2] +
-      ")"
-    );
-  };
 
-  //need to put following part into 2.
-  // document.getElementById("timer").style (need to find correct path / or update state but how? )
-  // = newColour
+    const changeAmount = colourDifference.map((val) =>
+      Math.round(val * timeSpentRatio)
+    );
+    // Note: variations can be negative numbers
+    // /!\ changeAmount need to be integers /!\
+
+    const currentColourValues = firstColourValues.map(
+      (num, i) => num + changeAmount[i]
+    );
+
+    currentColour = formatToRGB(currentColourValues);
+  }
 
   return (
-    <div className="App" style={{ backgroundColor: updatedColour }}>
+    <div className="App" style={{ backgroundColor: currentColour }}>
       <header
         id="timer"
         className={`App-header${isActive ? " App-header--active" : ""}`}

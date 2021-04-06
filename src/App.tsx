@@ -1,6 +1,13 @@
 import React, {useState, useCallback} from 'react';
 import './App.css';
 
+// Utilitaire -> move it somewhere else
+const getRGBValues = (colour:string) : number[] => {
+  return colour.match(/\d+/g)?.map(e => +e)! // Unary plus. Industry standard: parseInt(e, 10)
+  // ! = forces TS to discard possibility of a null result
+}
+
+
 function App() {
   const [isActive, setIsActive] = useState(false);
   const [startDate, setStartDate] = useState<Date>();
@@ -27,11 +34,6 @@ function App() {
   const firstColour = "rgb(52,111,171)" // <= in state
   const lastColour = "rgb(226,255,79)" // <= in state
 
-  // Utilitaire -> move it somewhere else
-  const getRGBValues = (colour:string) : number[] => {
-    return colour.match(/\d+/g)?.map(e => +e)!
-    // ! = forces TS to discard possibility of a null result
-  }
 
   const firstColourValues = getRGBValues(firstColour)
   const lastColourValues = getRGBValues(lastColour);

@@ -1,8 +1,8 @@
-###MVP
+### MVP
 
 User presses a button to start a pre-set timer, starting from a color and moving gradually to the end color.
 
-###User's story
+### User's story
 
 As a user, I want to:
 - Set a time of my choosing
@@ -11,7 +11,7 @@ As a user, I want to:
 - Restart
 - Choose the starting and ending colours
 
-Stretch goal:
+### Stretch goal:
 - Set a multipart timer with a color per part
 Example: a 20 min timer with 4 parts of 5min.
 _______________________________________________________________________________________________

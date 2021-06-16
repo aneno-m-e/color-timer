@@ -6,38 +6,42 @@ import { formatToRGBString } from "./util";
 
 function App() {
   const [isActive, setIsActive] = useState(false);
-  const [startDate, setStartDate] = useState<Date>();
-  const duration = 30 * 1000;
-  const [currentDate, setCurrentDate] = useState<Date>();
   const [firstColour, setFirstColour] = useState<RgbColor>({
     r: 155,
     g: 45,
     b: 102,
-  }); // <= set by user
+  });
   const [lastColour, setLastColour] = useState<RgbColor>({
     r: 24,
     g: 101,
     b: 47,
-  }); // <= set by user
+  });
+  const [duration, setDuration] = useState(0);
+  const [startDate, setStartDate] = useState<Date>();
+  const [currentDate, setCurrentDate] = useState<Date>();
 
-  const start = useCallback((event: FormEvent) => {
-    event.preventDefault();
-    setIsActive(true);
-    const updatedStartDate = new Date();
-    setStartDate(updatedStartDate);
-    // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
-    const intervalID = setInterval(() => {
-      const updatedCurrentDate = new Date();
-      if (
-        updatedCurrentDate.getTime() >=
-        updatedStartDate.getTime() + duration
-      ) {
-        clearInterval(intervalID);
-        setIsActive(false);
-      }
-      setCurrentDate(updatedCurrentDate);
-    }, duration / 256);
-  }, []);
+  const start = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault();
+      console.log("check");
+      setIsActive(true);
+      const updatedStartDate = new Date();
+      setStartDate(updatedStartDate);
+      // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
+      const intervalID = setInterval(() => {
+        const updatedCurrentDate = new Date();
+        if (
+          updatedCurrentDate.getTime() >=
+          updatedStartDate.getTime() + duration
+        ) {
+          clearInterval(intervalID);
+          setIsActive(false);
+        }
+        setCurrentDate(updatedCurrentDate);
+      }, duration / 256);
+    },
+    [duration] //check with Lydie
+  );
 
   let currentColour = firstColour;
 
@@ -60,6 +64,8 @@ function App() {
     };
   }
 
+  console.log(currentColour);
+
   return (
     <div
       className="App"
@@ -69,13 +75,16 @@ function App() {
         id="timer"
         className={`App-header${isActive ? " App-header--active" : ""}`}
       ></header>
-      <Form
-        start={start}
-        firstColour={firstColour}
-        setFirstColour={setFirstColour}
-        lastColour={lastColour}
-        setLastColour={setLastColour}
-      />
+      {!isActive && (
+        <Form
+          start={start}
+          setDuration={setDuration}
+          firstColour={firstColour}
+          setFirstColour={setFirstColour}
+          lastColour={lastColour}
+          setLastColour={setLastColour}
+        />
+      )}
     </div>
   );
 }

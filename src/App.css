@@ -17,3 +17,8 @@
 .App-link {
   color: #61dafb;
 }
+
+button {
+  min-height: 1rem;
+  min-width: 2rem;
+}

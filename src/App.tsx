@@ -71,10 +71,6 @@ function App() {
       className="App"
       style={{ backgroundColor: formatToRGBString(currentColour) }}
     >
-      <header
-        id="timer"
-        className={`App-header${isActive ? " App-header--active" : ""}`}
-      ></header>
       {!isActive && (
         <Form
           start={start}

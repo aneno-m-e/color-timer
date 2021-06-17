@@ -18,14 +18,17 @@ function ColourPicker({ id, label, colour, setColour }: Props) {
 
   return (
     <>
-      <label htmlFor={id}>{label}</label>
-      <button
-        type="button"
-        style={{ backgroundColor: formatToRGBString(colour) }}
-        onClick={toggle}
-      ></button>
-
-      {isOpen && <RgbColorPicker color={colour} onChange={setColour} />}
+      <label htmlFor={id}>
+        {label}
+        <button
+          type="button"
+          style={{ backgroundColor: formatToRGBString(colour) }}
+          onClick={toggle}
+        ></button>
+      </label>
+      <div className="picker">
+        {isOpen && <RgbColorPicker color={colour} onChange={setColour} />}
+      </div>
     </>
   );
 }

@@ -2,14 +2,3 @@
   text-align: center;
   min-height: 100vh;
 }
-
-.App-header {
-  background-size: 600%;
-  background-position: 0%;
-  min-height: 100vh;
-}
-
-button {
-  min-height: 1rem;
-  min-width: 2rem;
-}

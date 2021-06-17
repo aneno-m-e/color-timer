@@ -1,6 +1,7 @@
 import React, { FormEvent, useCallback, ChangeEvent } from "react";
 import { RgbColor } from "react-colorful";
-import ColourPicker from "./ColourPicker";
+import ColourPicker from "../ColourPicker";
+import "./Form.css";
 
 type Props = {
   start: (event: FormEvent) => void;
@@ -46,6 +47,7 @@ function Form({
 
   return (
     <form action="" onSubmit={start}>
+      <h1>Colour Timer</h1>
       <div id="duration">
         <label htmlFor="hours">H</label>
         <input

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, FormEvent } from "react";
 import { RgbColor } from "react-colorful";
 import "./App.css";
-import Form from "./Form";
+import Form from "./Form/Form";
 import { formatToRGBString } from "./util";
 
 function App() {
@@ -36,6 +36,7 @@ function App() {
         ) {
           clearInterval(intervalID);
           setIsActive(false);
+          //Clear startDate and currentDate
         }
         setCurrentDate(updatedCurrentDate);
       }, duration / 256);
@@ -63,8 +64,6 @@ function App() {
       b: firstColour.b + changeAmount.b,
     };
   }
-
-  console.log(currentColour);
 
   return (
     <div

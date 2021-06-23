@@ -1,19 +1,14 @@
 .App {
   text-align: center;
-}
-
-.App-header {
-  background-size: 600%;
-  background-position: 0%;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.endColourCircle {
+  width: 7rem;
+  height: 7rem;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -4.5rem 0 0 -3.5rem;
 }

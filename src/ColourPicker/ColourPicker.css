@@ -1,0 +1,9 @@
+.picker-container {
+  position: relative;
+}
+
+.picker {
+  position: absolute;
+  bottom: 100%;
+  left: 70%;
+}

@@ -1,16 +1,42 @@
-export const getRGBValues = (colour: string): number[] => {
-  return colour.match(/\d+/g)?.map((e) => +e)!; // Unary plus. Industry standard: parseInt(e, 10)
-  // ! = forces TS to discard possibility of a null result
+import { RgbColor } from "react-colorful";
+import { RefObject, useEffect } from "react";
+
+export const formatToRGBString = (colour: RgbColor): string => {
+  return `rgb(${colour.r}, ${colour.g}, ${colour.b})`;
 };
 
-export const formatToRGB = (colourValues: number[]): string => {
-  return (
-    "rgb(" +
-    colourValues[0] +
-    ", " +
-    colourValues[1] +
-    ", " +
-    colourValues[2] +
-    ")"
-  );
+// Improved version of https://usehooks.com/useOnClickOutside/
+export const useClickOutside = <Element extends HTMLElement>(
+  ref: RefObject<Element>,
+  handler: EventListener
+) => {
+  useEffect(() => {
+    let startedInside = false;
+    let startedWhenMounted = false;
+
+    const listener: EventListener = (event) => {
+      // Do nothing if `mousedown` or `touchstart` started inside ref element
+      if (startedInside || !startedWhenMounted) return;
+      // Do nothing if clicking ref's element or descendent elements
+      if (!ref.current || ref.current.contains(event.target as Node)) return;
+
+      handler(event);
+    };
+
+    const validateEventStart: EventListener = (event) => {
+      startedWhenMounted = !!ref.current;
+      startedInside =
+        !!ref.current && ref.current.contains(event.target as Node);
+    };
+
+    document.addEventListener("mousedown", validateEventStart);
+    document.addEventListener("touchstart", validateEventStart);
+    document.addEventListener("click", listener);
+
+    return () => {
+      document.removeEventListener("mousedown", validateEventStart);
+      document.removeEventListener("touchstart", validateEventStart);
+      document.removeEventListener("click", listener);
+    };
+  }, [ref, handler]);
 };

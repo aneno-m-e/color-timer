@@ -36,12 +36,13 @@ function App() {
         ) {
           clearInterval(intervalID);
           setIsActive(false);
-          //Clear startDate and currentDate
+          setStartDate(undefined);
+          setCurrentDate(undefined);
         }
         setCurrentDate(updatedCurrentDate);
       }, duration / 256);
     },
-    [duration] //check with Lydie
+    [duration]
   );
 
   let currentColour = firstColour;

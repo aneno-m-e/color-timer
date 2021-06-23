@@ -1,6 +1,6 @@
-import React, { FormEvent, useCallback, ChangeEvent } from "react";
+import React, { FormEvent, useCallback, useRef } from "react";
 import { RgbColor } from "react-colorful";
-import ColourPicker from "../ColourPicker";
+import ColourPicker from "../ColourPicker/ColourPicker";
 import "./Form.css";
 
 type Props = {
@@ -20,30 +20,16 @@ function Form({
   lastColour,
   setLastColour,
 }: Props) {
-  let hours = 0;
-  let minutes = 0;
-  let seconds = 0;
+  const hoursInput = useRef<HTMLInputElement>(null);
+  const minutesInput = useRef<HTMLInputElement>(null);
+  const secondsInput = useRef<HTMLInputElement>(null);
 
-  const getDurationInMs = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      switch (event.target.id) {
-        case "hours":
-          hours = event.target.valueAsNumber;
-          break;
-        case "minutes":
-          minutes = event.target.valueAsNumber;
-          break;
-        case "seconds":
-          seconds = event.target.valueAsNumber;
-          break;
-        default:
-          break;
-      }
-
-      setDuration((hours * (60 ^ 2) + minutes * 60 + seconds) * 1000);
-    },
-    []
-  );
+  const setDurationInMs = useCallback(() => {
+    const hours: number = hoursInput.current?.valueAsNumber || 0;
+    const minutes: number = minutesInput.current?.valueAsNumber || 0;
+    const seconds: number = secondsInput.current?.valueAsNumber || 0;
+    setDuration((hours * 3600 + minutes * 60 + seconds) * 1000);
+  }, [setDuration]);
 
   return (
     <form action="" onSubmit={start}>
@@ -54,7 +40,8 @@ function Form({
           id="hours"
           type="number"
           placeholder="00"
-          onChange={getDurationInMs}
+          ref={hoursInput}
+          onChange={setDurationInMs}
         />
 
         <label htmlFor="minutes">M</label>
@@ -62,7 +49,8 @@ function Form({
           id="minutes"
           type="number"
           placeholder="00"
-          onChange={getDurationInMs}
+          ref={minutesInput}
+          onChange={setDurationInMs}
         />
 
         <label htmlFor="seconds">S</label>
@@ -70,7 +58,8 @@ function Form({
           id="seconds"
           type="number"
           placeholder="00"
-          onChange={getDurationInMs}
+          ref={secondsInput}
+          onChange={setDurationInMs}
         />
       </div>
       <ColourPicker

@@ -23,7 +23,7 @@ function App() {
   const start = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
-      console.log("check");
+
       setIsActive(true);
       const updatedStartDate = new Date();
       setStartDate(updatedStartDate);
@@ -80,6 +80,12 @@ function App() {
           lastColour={lastColour}
           setLastColour={setLastColour}
         />
+      )}
+      {isActive && (
+        <div
+          className="endColourCircle"
+          style={{ backgroundColor: formatToRGBString(lastColour) }}
+        ></div>
       )}
     </div>
   );

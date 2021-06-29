@@ -36,6 +36,22 @@ function Form({ start, intervals, setIntervals }: Props) {
       const updatedIntervals = [...intervals];
       const updatedInterval = { ...updatedIntervals[index], [id]: colour };
       updatedIntervals[index] = updatedInterval;
+      if (intervals.length > 1 && id === "firstColour" && index > 0) {
+        updatedIntervals[index - 1] = {
+          ...updatedIntervals[index - 1],
+          lastColour: colour,
+        };
+      }
+      if (
+        intervals.length > 1 &&
+        id === "lastColour" &&
+        index < intervals.length - 1
+      ) {
+        updatedIntervals[index + 1] = {
+          ...updatedIntervals[index + 1],
+          firstColour: colour,
+        };
+      }
       setIntervals(updatedIntervals);
     },
     [intervals, setIntervals]

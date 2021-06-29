@@ -15,9 +15,11 @@ function Form({ start, intervals, setIntervals }: Props) {
     (index: number, duration: number) => {
       // to review with Lydie
       const updatedIntervals = [...intervals];
-      console.log(intervals, updatedIntervals);
-      updatedIntervals[index].duration = duration;
-      console.log(intervals, updatedIntervals);
+      const updatedInterval = {
+        ...updatedIntervals[index],
+        duration: duration,
+      };
+      updatedIntervals[index] = updatedInterval;
 
       setIntervals(updatedIntervals);
       // setIntervals((oldIntervals) => {
@@ -39,7 +41,18 @@ function Form({ start, intervals, setIntervals }: Props) {
     [intervals, setIntervals]
   );
 
-  const handleNewInterval = () => {};
+  const handleNewInterval = useCallback(() => {
+    const newIntervals = [...intervals];
+    const newInterval = {
+      ...newIntervals[0],
+      firstColour: {
+        ...newIntervals[newIntervals.length - 1].lastColour,
+      },
+      lastColour: { r: 255, g: 255, b: 255 },
+    };
+    newIntervals.push(newInterval);
+    setIntervals(newIntervals);
+  }, [intervals, setIntervals]);
 
   const handleDeleteInterval = () => {};
 

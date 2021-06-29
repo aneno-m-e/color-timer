@@ -21,18 +21,6 @@ const Interval = ({
   const minutesInput = useRef<HTMLInputElement>(null);
   const secondsInput = useRef<HTMLInputElement>(null);
 
-  // don't need:
-  //   const [firstColour, setFirstColour] = useState<RgbColor>({
-  //     r: 24,
-  //     g: 31,
-  //     b: 47,
-  //   });
-  //   const [lastColour, setLastColour] = useState<RgbColor>({
-  //     r: 255,
-  //     g: 238,
-  //     b: 187,
-  //   });
-
   const handleDurationChange = useCallback(() => {
     const hours: number = hoursInput.current?.valueAsNumber || 0;
     const minutes: number = minutesInput.current?.valueAsNumber || 0;

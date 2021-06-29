@@ -1,28 +1,37 @@
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback } from "react";
 import ColourPicker from "./ColourPicker/ColourPicker";
 import { RgbColor } from "react-colorful";
 
 type Props = {
   index: number;
-  onDurationChange: (index: number, duration: {}) => void;
+  firstColour: RgbColor;
+  lastColour: RgbColor;
+  onDurationChange: (index: number, duration: number) => void;
+  onColourChange: (index: number, id: string, colour: RgbColor) => void;
 };
 
-const Interval = ({ index, onDurationChange }: Props) => {
+const Interval = ({
+  index,
+  firstColour,
+  lastColour,
+  onDurationChange,
+  onColourChange,
+}: Props) => {
   const hoursInput = useRef<HTMLInputElement>(null);
   const minutesInput = useRef<HTMLInputElement>(null);
   const secondsInput = useRef<HTMLInputElement>(null);
 
   // don't need:
-  const [firstColour, setFirstColour] = useState<RgbColor>({
-    r: 24,
-    g: 31,
-    b: 47,
-  });
-  const [lastColour, setLastColour] = useState<RgbColor>({
-    r: 255,
-    g: 238,
-    b: 187,
-  });
+  //   const [firstColour, setFirstColour] = useState<RgbColor>({
+  //     r: 24,
+  //     g: 31,
+  //     b: 47,
+  //   });
+  //   const [lastColour, setLastColour] = useState<RgbColor>({
+  //     r: 255,
+  //     g: 238,
+  //     b: 187,
+  //   });
 
   const handleDurationChange = useCallback(() => {
     const hours: number = hoursInput.current?.valueAsNumber || 0;
@@ -66,14 +75,16 @@ const Interval = ({ index, onDurationChange }: Props) => {
       <ColourPicker
         id="firstColour"
         label="First Colour"
+        index={index}
         colour={firstColour}
-        setColour={setFirstColour}
+        onColourChange={onColourChange}
       />
       <ColourPicker
         id="lastColour"
         label="Last Colour"
+        index={index}
         colour={lastColour}
-        setColour={setLastColour}
+        onColourChange={onColourChange}
       />
     </>
   );

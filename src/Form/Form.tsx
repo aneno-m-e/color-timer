@@ -2,6 +2,7 @@ import React, { FormEvent, useCallback } from "react";
 import Interval from "../Interval";
 import { TInterval } from "../App";
 import "./Form.css";
+import { RgbColor } from "react-colorful";
 
 type Props = {
   start: (event: FormEvent) => void;
@@ -11,7 +12,7 @@ type Props = {
 
 function Form({ start, intervals, setIntervals }: Props) {
   const handleDurationChange = useCallback(
-    (index, duration) => {
+    (index: number, duration: number) => {
       // to review with Lydie
       const updatedIntervals = [...intervals];
       console.log(intervals, updatedIntervals);
@@ -28,7 +29,15 @@ function Form({ start, intervals, setIntervals }: Props) {
     [intervals, setIntervals]
   );
 
-  const handleColorChange = () => {}; //need to pass to interval
+  const handleColourChange = useCallback(
+    (index: number, id: string, colour: RgbColor) => {
+      const updatedIntervals = [...intervals];
+      const updatedInterval = { ...updatedIntervals[index], [id]: colour };
+      updatedIntervals[index] = updatedInterval;
+      setIntervals(updatedIntervals);
+    },
+    [intervals, setIntervals]
+  );
 
   const handleNewInterval = () => {};
 
@@ -42,7 +51,10 @@ function Form({ start, intervals, setIntervals }: Props) {
         <Interval
           key={index}
           index={index}
+          firstColour={interval.firstColour}
+          lastColour={interval.lastColour}
           onDurationChange={handleDurationChange}
+          onColourChange={handleColourChange}
         />
       ))}
       <button type="button" onClick={handleNewInterval}>

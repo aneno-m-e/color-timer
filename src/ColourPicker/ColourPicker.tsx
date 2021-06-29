@@ -6,11 +6,12 @@ import "./ColourPicker.css";
 type Props = {
   id: string;
   label: string;
+  index: number;
   colour: RgbColor;
-  setColour: (colour: RgbColor) => void;
+  onColourChange: (index: number, id: string, colour: RgbColor) => void;
 };
 
-function ColourPicker({ id, label, colour, setColour }: Props) {
+function ColourPicker({ id, label, index, colour, onColourChange }: Props) {
   const popover = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -19,6 +20,13 @@ function ColourPicker({ id, label, colour, setColour }: Props) {
   }, []);
 
   useClickOutside(popover, toggle);
+
+  const handleColourChange = useCallback(
+    (colour: RgbColor) => {
+      onColourChange(index, id, colour);
+    },
+    [index, id, onColourChange]
+  );
 
   return (
     <div className="picker-container">
@@ -32,7 +40,7 @@ function ColourPicker({ id, label, colour, setColour }: Props) {
       </label>
       {isOpen && (
         <div className="picker" ref={popover}>
-          <RgbColorPicker color={colour} onChange={setColour} />
+          <RgbColorPicker color={colour} onChange={handleColourChange} />
         </div>
       )}
     </div>

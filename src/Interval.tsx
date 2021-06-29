@@ -8,6 +8,7 @@ type Props = {
   lastColour: RgbColor;
   onDurationChange: (index: number, duration: number) => void;
   onColourChange: (index: number, id: string, colour: RgbColor) => void;
+  onDelete: (index: number) => void;
 };
 
 const Interval = ({
@@ -16,6 +17,7 @@ const Interval = ({
   lastColour,
   onDurationChange,
   onColourChange,
+  onDelete,
 }: Props) => {
   const hoursInput = useRef<HTMLInputElement>(null);
   const minutesInput = useRef<HTMLInputElement>(null);
@@ -29,6 +31,10 @@ const Interval = ({
 
     onDurationChange(index, duration);
   }, [index, onDurationChange]);
+
+  const handleDeleteInterval = useCallback(() => {
+    onDelete(index);
+  }, [index, onDelete]);
 
   return (
     <>
@@ -74,6 +80,11 @@ const Interval = ({
         colour={lastColour}
         onColourChange={onColourChange}
       />
+      {index > 0 && (
+        <button type="button" onClick={handleDeleteInterval}>
+          X
+        </button>
+      )}
     </>
   );
 };

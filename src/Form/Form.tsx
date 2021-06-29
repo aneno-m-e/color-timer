@@ -13,7 +13,6 @@ type Props = {
 function Form({ start, intervals, setIntervals }: Props) {
   const handleDurationChange = useCallback(
     (index: number, duration: number) => {
-      // to review with Lydie
       const updatedIntervals = [...intervals];
       const updatedInterval = {
         ...updatedIntervals[index],
@@ -22,6 +21,8 @@ function Form({ start, intervals, setIntervals }: Props) {
       updatedIntervals[index] = updatedInterval;
 
       setIntervals(updatedIntervals);
+
+      // to review with Lydie
       // setIntervals((oldIntervals) => {
       //   const updatedIntervals = oldIntervals;
       //   updatedIntervals[index].duration = duration;
@@ -70,7 +71,12 @@ function Form({ start, intervals, setIntervals }: Props) {
     setIntervals(newIntervals);
   }, [intervals, setIntervals]);
 
-  const handleDeleteInterval = () => {};
+  const handleDeleteInterval = (index: number) => {
+    const updatedIntervals = [...intervals];
+    updatedIntervals.splice(index, 1);
+
+    setIntervals(updatedIntervals);
+  };
 
   return (
     <form action="" onSubmit={start}>
@@ -84,6 +90,7 @@ function Form({ start, intervals, setIntervals }: Props) {
           lastColour={interval.lastColour}
           onDurationChange={handleDurationChange}
           onColourChange={handleColourChange}
+          onDelete={handleDeleteInterval}
         />
       ))}
       <button type="button" onClick={handleNewInterval}>

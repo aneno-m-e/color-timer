@@ -4,27 +4,43 @@ import "./App.css";
 import Form from "./Form/Form";
 import { formatToRGBString } from "./util";
 
+export type TInterval = {
+  firstColour: RgbColor;
+  lastColour: RgbColor;
+  duration: number;
+};
+
+const defaultIntervals = [
+  {
+    firstColour: { r: 24, g: 31, b: 47 },
+    lastColour: { r: 255, g: 238, b: 187 },
+    duration: 0,
+  },
+];
+
 function App() {
   const [isActive, setIsActive] = useState(false);
-  const [firstColour, setFirstColour] = useState<RgbColor>({
-    r: 155,
-    g: 45,
-    b: 102,
-  });
-  const [lastColour, setLastColour] = useState<RgbColor>({
-    r: 24,
-    g: 101,
-    b: 47,
-  });
-  const [duration, setDuration] = useState(0);
+
+  const [intervals, setIntervals] = useState<TInterval[]>(defaultIntervals);
+  const [totalDuration, setTotalDuration] = useState(0);
+
   const [startDate, setStartDate] = useState<Date>();
   const [currentDate, setCurrentDate] = useState<Date>();
+
+  const getTotalDuration = (intervals: TInterval[]) => {
+    const durationSum: number = intervals.reduce((total, interval) => {
+      return total + interval.duration;
+    }, 0);
+    setTotalDuration(durationSum);
+  };
 
   const start = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
 
       setIsActive(true);
+      getTotalDuration(intervals);
+
       const updatedStartDate = new Date();
       setStartDate(updatedStartDate);
       // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
@@ -32,7 +48,7 @@ function App() {
         const updatedCurrentDate = new Date();
         if (
           updatedCurrentDate.getTime() >=
-          updatedStartDate.getTime() + duration
+          updatedStartDate.getTime() + totalDuration
         ) {
           clearInterval(intervalID);
           setIsActive(false);
@@ -40,30 +56,40 @@ function App() {
           setCurrentDate(undefined);
         }
         setCurrentDate(updatedCurrentDate);
-      }, duration / 256);
+      }, totalDuration / 256);
     },
-    [duration]
+    [totalDuration, intervals]
   );
 
-  let currentColour = firstColour;
+  let currentColour = defaultIntervals[0].firstColour;
 
+  // How to synch setInterval with each interval?
+  // Calculate intervalEndDate for each interval?
   if (currentDate && startDate) {
-    const timeSpentRatio =
-      (currentDate.getTime() - startDate.getTime()) / duration;
+    intervals.forEach((interval) => {
+      const timeSpentRatio =
+        (currentDate.getTime() - startDate.getTime()) / interval.duration;
 
-    const changeAmount = {
-      r: Math.round((lastColour.r - firstColour.r) * timeSpentRatio),
-      g: Math.round((lastColour.g - firstColour.g) * timeSpentRatio),
-      b: Math.round((lastColour.b - firstColour.b) * timeSpentRatio),
-    };
-    // Note: variations can be negative numbers
-    // /!\ changeAmount need to be integers /!\
+      const changeAmount = {
+        r: Math.round(
+          (interval.lastColour.r - interval.firstColour.r) * timeSpentRatio
+        ),
+        g: Math.round(
+          (interval.lastColour.g - interval.firstColour.g) * timeSpentRatio
+        ),
+        b: Math.round(
+          (interval.lastColour.b - interval.firstColour.b) * timeSpentRatio
+        ),
+      };
+      // Note: variations can be negative numbers
+      // /!\ changeAmount need to be integers /!\
 
-    currentColour = {
-      r: firstColour.r + changeAmount.r,
-      g: firstColour.g + changeAmount.g,
-      b: firstColour.b + changeAmount.b,
-    };
+      currentColour = {
+        r: interval.firstColour.r + changeAmount.r,
+        g: interval.firstColour.g + changeAmount.g,
+        b: interval.firstColour.b + changeAmount.b,
+      };
+    });
   }
 
   return (
@@ -72,19 +98,16 @@ function App() {
       style={{ backgroundColor: formatToRGBString(currentColour) }}
     >
       {!isActive && (
-        <Form
-          start={start}
-          setDuration={setDuration}
-          firstColour={firstColour}
-          setFirstColour={setFirstColour}
-          lastColour={lastColour}
-          setLastColour={setLastColour}
-        />
+        <Form start={start} intervals={intervals} setIntervals={setIntervals} />
       )}
       {isActive && (
         <div
           className="endColourCircle"
-          style={{ backgroundColor: formatToRGBString(lastColour) }}
+          style={{
+            backgroundColor: formatToRGBString(
+              intervals[intervals.length - 1].lastColour
+            ),
+          }}
         ></div>
       )}
     </div>

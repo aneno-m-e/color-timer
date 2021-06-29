@@ -1,81 +1,55 @@
-import React, { FormEvent, useCallback, useRef } from "react";
-import { RgbColor } from "react-colorful";
-import ColourPicker from "../ColourPicker/ColourPicker";
+import React, { FormEvent, useCallback } from "react";
+import Interval from "../Interval";
+import { TInterval } from "../App";
 import "./Form.css";
 
 type Props = {
   start: (event: FormEvent) => void;
-  setDuration: (duration: number) => void;
-  firstColour: RgbColor;
-  setFirstColour: (colour: RgbColor) => void;
-  lastColour: RgbColor;
-  setLastColour: (colour: RgbColor) => void;
+  intervals: TInterval[];
+  setIntervals: (intervals: TInterval[]) => void;
 };
 
-function Form({
-  start,
-  setDuration,
-  firstColour,
-  setFirstColour,
-  lastColour,
-  setLastColour,
-}: Props) {
-  const hoursInput = useRef<HTMLInputElement>(null);
-  const minutesInput = useRef<HTMLInputElement>(null);
-  const secondsInput = useRef<HTMLInputElement>(null);
+function Form({ start, intervals, setIntervals }: Props) {
+  const handleDurationChange = useCallback(
+    (index, duration) => {
+      // to review with Lydie
+      const updatedIntervals = [...intervals];
+      console.log(intervals, updatedIntervals);
+      updatedIntervals[index].duration = duration;
+      console.log(intervals, updatedIntervals);
 
-  const setDurationInMs = useCallback(() => {
-    const hours: number = hoursInput.current?.valueAsNumber || 0;
-    const minutes: number = minutesInput.current?.valueAsNumber || 0;
-    const seconds: number = secondsInput.current?.valueAsNumber || 0;
-    setDuration((hours * 3600 + minutes * 60 + seconds) * 1000);
-  }, [setDuration]);
+      setIntervals(updatedIntervals);
+      // setIntervals((oldIntervals) => {
+      //   const updatedIntervals = oldIntervals;
+      //   updatedIntervals[index].duration = duration;
+      //   return updatedIntervals;
+      // });
+    },
+    [intervals, setIntervals]
+  );
+
+  const handleColorChange = () => {}; //need to pass to interval
+
+  const handleNewInterval = () => {};
+
+  const handleDeleteInterval = () => {};
 
   return (
     <form action="" onSubmit={start}>
       <h1>Colour Timer</h1>
-      <div id="duration">
-        <label htmlFor="hours">H</label>
-        <input
-          id="hours"
-          type="number"
-          placeholder="00"
-          ref={hoursInput}
-          onChange={setDurationInMs}
-        />
 
-        <label htmlFor="minutes">M</label>
-        <input
-          id="minutes"
-          type="number"
-          placeholder="00"
-          ref={minutesInput}
-          onChange={setDurationInMs}
+      {intervals.map((interval, index) => (
+        <Interval
+          key={index}
+          index={index}
+          onDurationChange={handleDurationChange}
         />
+      ))}
+      <button type="button" onClick={handleNewInterval}>
+        Add interval
+      </button>
 
-        <label htmlFor="seconds">S</label>
-        <input
-          id="seconds"
-          type="number"
-          placeholder="00"
-          ref={secondsInput}
-          onChange={setDurationInMs}
-        />
-      </div>
-      <ColourPicker
-        id="firstColour"
-        label="First Colour"
-        colour={firstColour}
-        setColour={setFirstColour}
-      />
-      <ColourPicker
-        id="lastColour"
-        label="Last Colour"
-        colour={lastColour}
-        setColour={setLastColour}
-      />
-
-      <button>Start !</button>
+      <button type="submit">Start !</button>
     </form>
   );
 }

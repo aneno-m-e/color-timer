@@ -1,5 +1,5 @@
 import React, { FormEvent, useCallback } from "react";
-import Interval from "../Interval";
+import Interval from "../Interval/Interval";
 import { TInterval } from "../App";
 import "./Form.css";
 import { RgbColor } from "react-colorful";

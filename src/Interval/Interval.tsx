@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from "react";
-import ColourPicker from "./ColourPicker/ColourPicker";
+import ColourPicker from "../ColourPicker/ColourPicker";
 import { RgbColor } from "react-colorful";
+import "./Interval.css";
 
 type Props = {
   index: number;
@@ -37,7 +38,7 @@ const Interval = ({
   }, [index, onDelete]);
 
   return (
-    <>
+    <div className="interval">
       <div id="duration">
         <label htmlFor="hours">H</label>
         <input
@@ -81,11 +82,15 @@ const Interval = ({
         onColourChange={onColourChange}
       />
       {index > 0 && (
-        <button type="button" onClick={handleDeleteInterval}>
+        <button
+          type="button"
+          className="delete-button"
+          onClick={handleDeleteInterval}
+        >
           X
         </button>
       )}
-    </>
+    </div>
   );
 };
 

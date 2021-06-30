@@ -66,11 +66,9 @@ function Form({ start, intervals, setIntervals }: Props) {
     // Find best way to generate new colour with a good contraste to previous colour
     const newIntervalLastColour = (colour: RgbColor) => {
       if (new TinyColor(previousInterval.lastColour).isLight()) {
-        return random();
+        return new TinyColor(previousInterval.lastColour).tetrad()[1].darken();
       }
-      return new TinyColor(previousInterval.lastColour)
-        .splitcomplement()[2]
-        .lighten();
+      return new TinyColor(previousInterval.lastColour).tetrad()[1].lighten();
     };
     const newInterval = {
       ...newIntervals[0],

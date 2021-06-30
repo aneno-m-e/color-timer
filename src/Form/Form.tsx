@@ -75,6 +75,13 @@ function Form({ start, intervals, setIntervals }: Props) {
     const updatedIntervals = [...intervals];
     updatedIntervals.splice(index, 1);
 
+    // //Makes sure new element's firstColour at index matches previous element's lastColour
+    if (0 < index && index < intervals.length - 1) {
+      updatedIntervals[index] = {
+        ...updatedIntervals[index],
+        firstColour: { ...updatedIntervals[index - 1].lastColour },
+      };
+    }
     setIntervals(updatedIntervals);
   };
 

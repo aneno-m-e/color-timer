@@ -45,6 +45,7 @@ const Interval = ({
           id="hours"
           type="number"
           placeholder="00"
+          min="0"
           ref={hoursInput}
           onChange={handleDurationChange}
         />
@@ -54,6 +55,7 @@ const Interval = ({
           id="minutes"
           type="number"
           placeholder="00"
+          min="0"
           ref={minutesInput}
           onChange={handleDurationChange}
         />
@@ -63,6 +65,7 @@ const Interval = ({
           id="seconds"
           type="number"
           placeholder="00"
+          min="0"
           ref={secondsInput}
           onChange={handleDurationChange}
         />
@@ -81,15 +84,13 @@ const Interval = ({
         colour={lastColour}
         onColourChange={onColourChange}
       />
-      {index > 0 && (
-        <button
-          type="button"
-          className="delete-button"
-          onClick={handleDeleteInterval}
-        >
-          X
-        </button>
-      )}
+      <button
+        type="button"
+        className="delete-button"
+        onClick={handleDeleteInterval}
+      >
+        X
+      </button>
     </div>
   );
 };

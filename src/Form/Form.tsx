@@ -3,6 +3,7 @@ import Interval from "../Interval/Interval";
 import { TInterval } from "../App";
 import "./Form.css";
 import { RgbColor } from "react-colorful";
+import { TinyColor, random } from "@ctrl/tinycolor";
 
 type Props = {
   start: (event: FormEvent) => void;
@@ -60,13 +61,23 @@ function Form({ start, intervals, setIntervals }: Props) {
 
   const handleNewInterval = useCallback(() => {
     const newIntervals = [...intervals];
+    const previousInterval = newIntervals[newIntervals.length - 1];
+
+    // Find best way to generate new colour with a good contraste to previous colour
+    const newIntervalLastColour = (colour: RgbColor) => {
+      if (new TinyColor(previousInterval.lastColour).isLight()) {
+        return random();
+      }
+      return new TinyColor(previousInterval.lastColour)
+        .splitcomplement()[2]
+        .lighten();
+    };
     const newInterval = {
       ...newIntervals[0],
-      firstColour: {
-        ...newIntervals[newIntervals.length - 1].lastColour,
-      },
-      lastColour: { r: 255, g: 255, b: 255 },
+      firstColour: previousInterval.lastColour,
+      lastColour: newIntervalLastColour(previousInterval.lastColour),
     };
+
     newIntervals.push(newInterval);
     setIntervals(newIntervals);
   }, [intervals, setIntervals]);

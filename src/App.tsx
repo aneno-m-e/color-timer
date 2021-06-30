@@ -19,83 +19,112 @@ const defaultIntervals = [
 ];
 
 function App() {
+  // To do
+  // - Check accessibility
+  // - Test
+  // - Improve auto generation of last colours https://github.com/bgrins/TinyColor
+  // - Create utils with previousInterval and nextInterval to make code more readable?
+
   const [isActive, setIsActive] = useState(false);
 
   const [intervals, setIntervals] = useState<TInterval[]>(defaultIntervals);
-  const [totalDuration, setTotalDuration] = useState(0);
+  //const [totalDuration, setTotalDuration] = useState(0);
 
   const [startDate, setStartDate] = useState<Date>();
   const [currentDate, setCurrentDate] = useState<Date>();
 
-  const getTotalDuration = (intervals: TInterval[]) => {
-    const durationSum: number = intervals.reduce((total, interval) => {
-      return total + interval.duration;
-    }, 0);
-    setTotalDuration(durationSum);
-  };
+  const [intervalDuration, setIntervalDuration] = useState(0);
+  const [index, setIndex] = useState<number>(0); // Remove 0?
+
+  // need it?
+  // const getTotalDuration = (intervals: TInterval[]) => {
+  //   const durationSum: number = intervals.reduce((total, interval) => {
+  //     return total + interval.duration;
+  //   }, 0);
+  //   setTotalDuration(durationSum);
+  // };
 
   const start = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
 
       setIsActive(true);
-      getTotalDuration(intervals);
-
-      const updatedStartDate = new Date();
-      setStartDate(updatedStartDate);
-      // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
-      const intervalID = setInterval(() => {
-        const updatedCurrentDate = new Date();
-        if (
-          updatedCurrentDate.getTime() >=
-          updatedStartDate.getTime() + totalDuration
-        ) {
-          clearInterval(intervalID);
-          setIsActive(false);
-          setStartDate(undefined);
-          setCurrentDate(undefined);
-        }
-        setCurrentDate(updatedCurrentDate);
-      }, totalDuration / 256);
+      //  getTotalDuration(intervals);
+      timer();
     },
-    [totalDuration, intervals]
+    [timer]
   );
 
-  let currentColour = defaultIntervals[0].firstColour;
+  // Need to solve React error: "The 'timer' function makes the dependencies of useCallback Hook (at line 57) change on every render.
+  // Move it inside the useCallback callback.
+  // Alternatively, wrap the definition of 'timer' in its own useCallback() Hook"
+  async function timer() {
+    for (let index = 0; index < intervals.length; index++) {
+      let interval = intervals[index];
+      const updatedStartDate = new Date();
+      setStartDate(updatedStartDate);
+      setIntervalDuration(interval.duration);
+      setIndex(index);
 
-  // How to synch setInterval with each interval?
-  // Calculate intervalEndDate for each interval?
+      await new Promise((resolve, reject) => {
+        // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
+        const intervalID = setInterval(() => {
+          const updatedCurrentDate = new Date();
+          if (
+            updatedCurrentDate.getTime() >=
+            updatedStartDate.getTime() + intervalDuration
+          ) {
+            if (index === intervals.length - 1) {
+              setIsActive(false);
+              setStartDate(undefined);
+              setCurrentDate(undefined);
+              //     setIntervalDuration(0);
+            }
+            clearInterval(intervalID);
+            resolve("End of interval");
+          }
+          setCurrentDate(updatedCurrentDate);
+        }, intervalDuration / 256);
+      });
+    }
+  }
+
+  let currentColour = intervals[0].firstColour;
+
   if (currentDate && startDate) {
-    intervals.forEach((interval) => {
-      const timeSpentRatio =
-        (currentDate.getTime() - startDate.getTime()) / interval.duration;
+    const timeSpentRatio =
+      (currentDate.getTime() - startDate.getTime()) / intervals[index].duration;
 
-      const changeAmount = {
-        r: Math.round(
-          (interval.lastColour.r - interval.firstColour.r) * timeSpentRatio
-        ),
-        g: Math.round(
-          (interval.lastColour.g - interval.firstColour.g) * timeSpentRatio
-        ),
-        b: Math.round(
-          (interval.lastColour.b - interval.firstColour.b) * timeSpentRatio
-        ),
-      };
-      // Note: variations can be negative numbers
-      // /!\ changeAmount need to be integers /!\
+    const changeAmount = {
+      r: Math.round(
+        (intervals[index].lastColour.r - intervals[index].firstColour.r) *
+          timeSpentRatio
+      ),
+      g: Math.round(
+        (intervals[index].lastColour.g - intervals[index].firstColour.g) *
+          timeSpentRatio
+      ),
+      b: Math.round(
+        (intervals[index].lastColour.b - intervals[index].firstColour.b) *
+          timeSpentRatio
+      ),
+    };
+    // Note: variations can be negative numbers
+    // /!\ changeAmount need to be integers /!\
 
-      currentColour = {
-        r: interval.firstColour.r + changeAmount.r,
-        g: interval.firstColour.g + changeAmount.g,
-        b: interval.firstColour.b + changeAmount.b,
-      };
-    });
+    currentColour = {
+      r: intervals[index].firstColour.r + changeAmount.r,
+      g: intervals[index].firstColour.g + changeAmount.g,
+      b: intervals[index].firstColour.b + changeAmount.b,
+    };
   }
 
   return (
     <div
       className="App"
-      style={{ backgroundColor: formatToRGBString(currentColour) }}
+      style={{
+        backgroundColor: formatToRGBString(currentColour),
+      }}
     >
       {!isActive && (
         <Form start={start} intervals={intervals} setIntervals={setIntervals} />

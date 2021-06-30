@@ -1,14 +1,14 @@
 .App {
   text-align: center;
   min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-.endColourCircle {
+.firstToLastColourCircle {
   width: 7rem;
   height: 7rem;
   border-radius: 50%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: -4.5rem 0 0 -3.5rem;
 }

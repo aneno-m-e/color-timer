@@ -100,16 +100,19 @@ function App() {
       {!isActive && (
         <Form start={start} intervals={intervals} setIntervals={setIntervals} />
       )}
-      {isActive && (
-        <div
-          className="endColourCircle"
-          style={{
-            backgroundColor: formatToRGBString(
-              intervals[intervals.length - 1].lastColour
-            ),
-          }}
-        ></div>
-      )}
+      {isActive &&
+        intervals.map((interval, index) => (
+          <div
+            className="firstToLastColourCircle"
+            key={index}
+            style={{
+              backgroundImage: `linear-gradient(to right, ${formatToRGBString(
+                interval.firstColour
+              )}, ${formatToRGBString(interval.lastColour)})`,
+              // backgroundColor:  formatToRGBString(intervals[index].lastColour),
+            }}
+          ></div>
+        ))}
     </div>
   );
 }

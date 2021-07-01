@@ -9,9 +9,10 @@ type Props = {
   start: (event: FormEvent) => void;
   intervals: TInterval[];
   setIntervals: (intervals: TInterval[]) => void;
+  setTotalDuration: (duration: number) => void;
 };
 
-function Form({ start, intervals, setIntervals }: Props) {
+function Form({ start, intervals, setIntervals, setTotalDuration }: Props) {
   const handleDurationChange = useCallback(
     (index: number, duration: number) => {
       const updatedIntervals = [...intervals];
@@ -21,6 +22,11 @@ function Form({ start, intervals, setIntervals }: Props) {
       };
       updatedIntervals[index] = updatedInterval;
 
+      setTotalDuration(
+        updatedIntervals.reduce((total, interval) => {
+          return total + interval.duration;
+        }, 0)
+      );
       setIntervals(updatedIntervals);
 
       // to review with Lydie
@@ -30,7 +36,7 @@ function Form({ start, intervals, setIntervals }: Props) {
       //   return updatedIntervals;
       // });
     },
-    [intervals, setIntervals]
+    [intervals, setIntervals, setTotalDuration]
   );
 
   const handleColourChange = useCallback(

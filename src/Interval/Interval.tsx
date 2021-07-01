@@ -44,7 +44,7 @@ const Interval = ({
         <input
           id="hours"
           type="number"
-          placeholder="00"
+          placeholder="0"
           min="0"
           ref={hoursInput}
           onChange={handleDurationChange}
@@ -54,7 +54,7 @@ const Interval = ({
         <input
           id="minutes"
           type="number"
-          placeholder="00"
+          placeholder="0"
           min="0"
           ref={minutesInput}
           onChange={handleDurationChange}
@@ -64,7 +64,7 @@ const Interval = ({
         <input
           id="seconds"
           type="number"
-          placeholder="00"
+          placeholder="0"
           min="0"
           ref={secondsInput}
           onChange={handleDurationChange}

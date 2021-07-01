@@ -22,37 +22,39 @@ function App() {
   // To do
   // - Check accessibility
   // - Test
+  // - Display error message if duration = 0
+  // - Implemente pause and restart
+  // - Create favicon
+  // - timer with multiple intervals doesn't work for longer durations
+  // - Fix false first start
+  // - Hide delete button of first interval if it's by itself
   // - Improve auto generation of last colours https://github.com/bgrins/TinyColor
   // - Create utils with previousInterval and nextInterval to make code more readable?
 
   const [isActive, setIsActive] = useState(false);
 
   const [intervals, setIntervals] = useState<TInterval[]>(defaultIntervals);
-  //const [totalDuration, setTotalDuration] = useState(0);
 
   const [startDate, setStartDate] = useState<Date>();
   const [currentDate, setCurrentDate] = useState<Date>();
-
+  const [totalDuration, setTotalDuration] = useState<number>(0);
   const [intervalDuration, setIntervalDuration] = useState(0);
   const [index, setIndex] = useState<number>(0); // Remove 0?
-
-  // need it?
-  // const getTotalDuration = (intervals: TInterval[]) => {
-  //   const durationSum: number = intervals.reduce((total, interval) => {
-  //     return total + interval.duration;
-  //   }, 0);
-  //   setTotalDuration(durationSum);
-  // };
 
   const start = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
+      try {
+        if (totalDuration === 0) throw new Error("Duration = 0");
+      } catch (err) {
+        console.error(err.message);
+        return false;
+      }
 
       setIsActive(true);
-      //  getTotalDuration(intervals);
       timer();
     },
-    [timer]
+    [timer, totalDuration]
   );
 
   // Need to solve React error: "The 'timer' function makes the dependencies of useCallback Hook (at line 57) change on every render.
@@ -127,7 +129,12 @@ function App() {
       }}
     >
       {!isActive && (
-        <Form start={start} intervals={intervals} setIntervals={setIntervals} />
+        <Form
+          start={start}
+          intervals={intervals}
+          setIntervals={setIntervals}
+          setTotalDuration={setTotalDuration}
+        />
       )}
       {isActive &&
         intervals.map((interval, index) => (

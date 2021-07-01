@@ -49,46 +49,42 @@ function App() {
         console.error(err.message);
         return false;
       }
-
       setIsActive(true);
+
+      async function timer() {
+        for (let index = 0; index < intervals.length; index++) {
+          let interval = intervals[index];
+          const updatedStartDate = new Date();
+          setStartDate(updatedStartDate);
+          setIntervalDuration(interval.duration);
+          setIndex(index);
+          console.log(index);
+          await new Promise((resolve, reject) => {
+            // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
+            const intervalID = setInterval(() => {
+              const updatedCurrentDate = new Date();
+              if (
+                updatedCurrentDate.getTime() >=
+                updatedStartDate.getTime() + intervalDuration
+              ) {
+                if (index === intervals.length - 1) {
+                  setIsActive(false);
+                  setStartDate(undefined);
+                  setCurrentDate(undefined);
+                  //     setIntervalDuration(0);
+                }
+                clearInterval(intervalID);
+                resolve("End of interval");
+              }
+              setCurrentDate(updatedCurrentDate);
+            }, intervalDuration / 256);
+          });
+        }
+      }
       timer();
     },
-    [timer, totalDuration]
+    [totalDuration, intervalDuration, intervals]
   );
-
-  // Need to solve React error: "The 'timer' function makes the dependencies of useCallback Hook (at line 57) change on every render.
-  // Move it inside the useCallback callback.
-  // Alternatively, wrap the definition of 'timer' in its own useCallback() Hook"
-  async function timer() {
-    for (let index = 0; index < intervals.length; index++) {
-      let interval = intervals[index];
-      const updatedStartDate = new Date();
-      setStartDate(updatedStartDate);
-      setIntervalDuration(interval.duration);
-      setIndex(index);
-
-      await new Promise((resolve, reject) => {
-        // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
-        const intervalID = setInterval(() => {
-          const updatedCurrentDate = new Date();
-          if (
-            updatedCurrentDate.getTime() >=
-            updatedStartDate.getTime() + intervalDuration
-          ) {
-            if (index === intervals.length - 1) {
-              setIsActive(false);
-              setStartDate(undefined);
-              setCurrentDate(undefined);
-              //     setIntervalDuration(0);
-            }
-            clearInterval(intervalID);
-            resolve("End of interval");
-          }
-          setCurrentDate(updatedCurrentDate);
-        }, intervalDuration / 256);
-      });
-    }
-  }
 
   let currentColour = intervals[0].firstColour;
 

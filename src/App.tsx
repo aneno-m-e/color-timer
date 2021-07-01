@@ -13,7 +13,7 @@ export type TInterval = {
 const defaultIntervals = [
   {
     firstColour: { r: 24, g: 31, b: 47 },
-    lastColour: { r: 255, g: 238, b: 187 },
+    lastColour: { r: 70, g: 187, b: 226 },
     duration: 0,
   },
 ];
@@ -28,7 +28,6 @@ function App() {
   // - timer with multiple intervals doesn't work for longer durations
   // - Fix false first start
   // - Hide delete button of first interval if it's by itself
-  // - Improve auto generation of last colours https://github.com/bgrins/TinyColor
   // - Create utils with previousInterval and nextInterval to make code more readable?
 
   const [isActive, setIsActive] = useState(false);

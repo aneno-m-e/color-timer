@@ -14,7 +14,13 @@ const defaultIntervals = [
   {
     firstColour: { r: 24, g: 31, b: 47 },
     lastColour: { r: 70, g: 187, b: 226 },
-    duration: 0,
+    duration: 60000,
+  },
+
+  {
+    firstColour: { r: 70, g: 187, b: 226 },
+    lastColour: { r: 170, g: 13, b: 90 },
+    duration: 20000,
   },
 ];
 
@@ -25,8 +31,6 @@ function App() {
   // - Display error message if duration = 0
   // - Implemente pause and restart
   // - Create favicon
-  // - timer with multiple intervals doesn't work for longer durations
-  // - Fix false first start
   // - Hide delete button of first interval if it's by itself
   // - Create utils with previousInterval and nextInterval to make code more readable?
 
@@ -37,8 +41,46 @@ function App() {
   const [startDate, setStartDate] = useState<Date>();
   const [currentDate, setCurrentDate] = useState<Date>();
   const [totalDuration, setTotalDuration] = useState<number>(0);
-  const [intervalDuration, setIntervalDuration] = useState(0);
   const [index, setIndex] = useState<number>(0); // Remove 0?
+
+  let currentColour = intervals[0].firstColour;
+
+  const timer = useCallback(
+    async (interval: TInterval, i: number) => {
+      return new Promise<void>((resolve, reject) => {
+        const updatedStartDate = new Date();
+        setStartDate(updatedStartDate);
+
+        // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
+        const intervalID = setInterval(() => {
+          const updatedCurrentDate = new Date();
+          if (
+            updatedCurrentDate.getTime() >=
+            updatedStartDate.getTime() + interval.duration
+          ) {
+            if (i === intervals.length - 1) {
+              setIsActive(false);
+              setStartDate(undefined);
+              setCurrentDate(undefined);
+            }
+            resolve();
+            clearInterval(intervalID);
+          }
+          setCurrentDate(updatedCurrentDate);
+        }, interval.duration / 256);
+      });
+    },
+    [intervals.length]
+  );
+
+  const loopThroughEachInterval = useCallback(async () => {
+    for (let i = 0; i < intervals.length; i++) {
+      let interval = intervals[i];
+
+      setIndex(i);
+      await timer(interval, i);
+    }
+  }, [timer, intervals]);
 
   const start = useCallback(
     (event: FormEvent) => {
@@ -50,43 +92,10 @@ function App() {
         return false;
       }
       setIsActive(true);
-
-      async function timer() {
-        for (let index = 0; index < intervals.length; index++) {
-          let interval = intervals[index];
-          const updatedStartDate = new Date();
-          setStartDate(updatedStartDate);
-          setIntervalDuration(interval.duration);
-          setIndex(index);
-          console.log(index);
-          await new Promise((resolve, reject) => {
-            // To do: Save intervalID outside callback so it can be used to pause or clear timer. const intervalID = useRef
-            const intervalID = setInterval(() => {
-              const updatedCurrentDate = new Date();
-              if (
-                updatedCurrentDate.getTime() >=
-                updatedStartDate.getTime() + intervalDuration
-              ) {
-                if (index === intervals.length - 1) {
-                  setIsActive(false);
-                  setStartDate(undefined);
-                  setCurrentDate(undefined);
-                  //     setIntervalDuration(0);
-                }
-                clearInterval(intervalID);
-                resolve("End of interval");
-              }
-              setCurrentDate(updatedCurrentDate);
-            }, intervalDuration / 256);
-          });
-        }
-      }
-      timer();
+      loopThroughEachInterval();
     },
-    [totalDuration, intervalDuration, intervals]
+    [totalDuration, loopThroughEachInterval]
   );
-
-  let currentColour = intervals[0].firstColour;
 
   if (currentDate && startDate) {
     const timeSpentRatio =

@@ -28,13 +28,6 @@ function Form({ start, intervals, setIntervals, setTotalDuration }: Props) {
         }, 0)
       );
       setIntervals(updatedIntervals);
-
-      // to review with Lydie
-      // setIntervals((oldIntervals) => {
-      //   const updatedIntervals = oldIntervals;
-      //   updatedIntervals[index].duration = duration;
-      //   return updatedIntervals;
-      // });
     },
     [intervals, setIntervals, setTotalDuration]
   );

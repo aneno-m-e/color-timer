@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/color-timer/static/css/main.0b1c7fa5.chunk.css",
+    "main.js": "/color-timer/static/js/main.15508adc.chunk.js",
+    "main.js.map": "/color-timer/static/js/main.15508adc.chunk.js.map",
+    "runtime-main.js": "/color-timer/static/js/runtime-main.8baf39f0.js",
+    "runtime-main.js.map": "/color-timer/static/js/runtime-main.8baf39f0.js.map",
+    "static/js/2.566bc448.chunk.js": "/color-timer/static/js/2.566bc448.chunk.js",
+    "static/js/2.566bc448.chunk.js.map": "/color-timer/static/js/2.566bc448.chunk.js.map",
+    "index.html": "/color-timer/index.html",
+    "static/css/main.0b1c7fa5.chunk.css.map": "/color-timer/static/css/main.0b1c7fa5.chunk.css.map",
+    "static/js/2.566bc448.chunk.js.LICENSE.txt": "/color-timer/static/js/2.566bc448.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8baf39f0.js",
+    "static/js/2.566bc448.chunk.js",
+    "static/css/main.0b1c7fa5.chunk.css",
+    "static/js/main.15508adc.chunk.js"
+  ]
+}

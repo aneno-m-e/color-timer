@@ -108,6 +108,7 @@ function Form({ start, intervals, setIntervals, setTotalDuration }: Props) {
           onDurationChange={handleDurationChange}
           onColourChange={handleColourChange}
           onDelete={handleDeleteInterval}
+          showDeleteButton={intervals.length > 1}
         />
       ))}
       <button type="button" onClick={handleNewInterval}>

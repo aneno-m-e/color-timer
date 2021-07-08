@@ -14,26 +14,11 @@ const defaultIntervals = [
   {
     firstColour: { r: 24, g: 31, b: 47 },
     lastColour: { r: 70, g: 187, b: 226 },
-    duration: 60000,
-  },
-
-  {
-    firstColour: { r: 70, g: 187, b: 226 },
-    lastColour: { r: 170, g: 13, b: 90 },
-    duration: 20000,
+    duration: 0,
   },
 ];
 
 function App() {
-  // To do
-  // - Check accessibility
-  // - Test
-  // - Display error message if duration = 0
-  // - Implemente pause and restart
-  // - Create favicon
-  // - Hide delete button of first interval if it's by itself
-  // - Create utils with previousInterval and nextInterval to make code more readable?
-
   const [isActive, setIsActive] = useState(false);
 
   const [intervals, setIntervals] = useState<TInterval[]>(defaultIntervals);
@@ -87,6 +72,7 @@ function App() {
       event.preventDefault();
       try {
         if (totalDuration === 0) throw new Error("Duration = 0");
+        // intervals.every
       } catch (err) {
         console.error(err.message);
         return false;

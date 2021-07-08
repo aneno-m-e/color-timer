@@ -5,16 +5,28 @@ User presses a button to start a pre-set timer, starting from a color and moving
 ### User's story
 
 As a user, I want to:
-- Set a time of my choosing
+
+- Set a time of my choosing ✔️
 - Pause the timer
 - Resume timer
 - Restart
-- Choose the starting and ending colours
+- Choose the starting and ending colours ✔️
 
 ### Stretch goal:
-- Set a multipart timer with a color per part
-Example: a 20 min timer with 4 parts of 5min.
-_______________________________________________________________________________________________
+
+- Set a multipart timer with a color per part ✔️
+  Example: a 20 min timer with 4 parts of 5min.
+
+### To do:
+
+- Check accessibility
+- Test
+- Display error message if duration = 0
+- Implement pause and restart
+- At the end of the time, repopulate inputs with intervals[] content.
+- Create favicon
+
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
